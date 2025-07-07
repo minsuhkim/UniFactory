@@ -13,6 +13,9 @@ namespace _01.Scripts
         
         private bool _isMoving = true;
         private bool _isPerformedFirstTurn = false;
+
+        private float _workTime;
+        
         private void Awake()
         {
             Debug.Log(transform.forward);
@@ -42,10 +45,17 @@ namespace _01.Scripts
             // transform.rotation = dest;
             Debug.Log(transform.forward);
         }
+
+        private IEnumerator C_Wait()
+        {
+            _isMoving = false;
+            yield return new WaitForSeconds(_workTime);
+            _isMoving = true;
+        }
         
         private void OnTriggerEnter(Collider other)
         {
-            // if (other.gameObject.layer == _turnLayer.value)
+            if (other.gameObject.layer == 10)
             {
                 Debug.Log("Turn Start!");
                 TurningZone zone = other.gameObject.GetComponent<TurningZone>();
@@ -62,6 +72,20 @@ namespace _01.Scripts
                 }
                 TurnDirection direction = zone.GetTurnDirection();
                 StartCoroutine(C_Turn(direction));
+            }
+            
+            else if (other.gameObject.layer == 11)
+            {
+                Debug.Log("Destroy!");
+                Destroy(gameObject);
+            }
+            
+            else if (other.gameObject.layer == 12)
+            {
+                ArmController armController = other.gameObject.GetComponent<ArmController>();
+                _workTime = armController.workTime;
+                StartCoroutine(armController.C_StartWork());
+                StartCoroutine(C_Wait());
             }
         }
     }
