@@ -14,7 +14,7 @@ namespace _01.Scripts
         private bool _isMoving = true;
         private bool _isPerformedFirstTurn = false;
 
-        private float _workTime;
+        private float _workTime = 2f;
         
         private void Awake()
         {
@@ -85,6 +85,13 @@ namespace _01.Scripts
                 ArmController armController = other.gameObject.GetComponent<ArmController>();
                 _workTime = armController.workTime;
                 StartCoroutine(armController.C_StartWork());
+                StartCoroutine(C_Wait());
+            }
+            
+            else if (other.gameObject.layer == 13)
+            {
+                MachineController machineController = other.gameObject.GetComponent<MachineController>();
+                StartCoroutine(machineController.C_Work(_workTime));
                 StartCoroutine(C_Wait());
             }
         }
