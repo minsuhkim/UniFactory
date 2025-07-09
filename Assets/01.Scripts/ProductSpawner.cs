@@ -18,7 +18,7 @@ public class ProductSpawner : MonoBehaviour
     {
         while (true)
         {
-            Instantiate(_product, _spawnPoints[Random.Range(0, _spawnPoints.Length)].position, Quaternion.identity);
+            Instantiate(_product, _spawnPoints[Random.Range(0, _spawnPoints.Length)].position, transform.rotation);
             yield return new WaitForSeconds(_spawnRate);
         }
     }
